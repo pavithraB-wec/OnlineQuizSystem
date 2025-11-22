@@ -24,19 +24,19 @@ A modern web-based quiz system developed using **Python Flask**, featuring a cle
 
 ---
 
-## 🖼️ Screenshots
+## 📸 Online Quiz System Preview
 
-### 🔐 Login Page  
-<img src="screenshots/login.png" width="800">
+### 🔐 Login & 📝 Register Pages
+<p align="center">
+  <img src="screenshots/login.png" width="45%" />
+  <img src="screenshots/register.png" width="45%" />
+</p>
 
-### 📝 Registration Page  
-<img src="screenshots/register.png" width="800">
-
-### 🧑‍💼 Admin Dashboard  
-<img src="screenshots/admin_dashboard.png" width="800">
-
-### 📚 Manage Questions Page  
-<img src="screenshots/questions.png" width="800">
+### 🧑‍💼 Admin Dashboard & 📚 Manage Questions
+<p align="center">
+  <img src="screenshots/admin_dashboard.png" width="45%" />
+  <img src="screenshots/questions.png" width="45%" />
+</p>
 
 ---
 
