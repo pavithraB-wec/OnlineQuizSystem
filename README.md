@@ -6,17 +6,6 @@
 
 <h2 align="center">🎓 Online Quiz System (OQS)</h2>
 
-<p align="center">
-  A modern web-based MCQ quiz platform with student, teacher & admin roles — built using Python Flask.
-  <br />
-  <a href="#">Live Demo (Coming Soon)</a> • 
-  <a href="https://github.com/pavithraB-wec/OnlineQuizSystem/issues">Report Bug</a> • 
-  <a href="https://github.com/pavithraB-wec/OnlineQuizSystem/pulls">Request Feature</a>
-</p>
-</p>
-
----
-
 ## 🔰 Badges & Tech Info
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
