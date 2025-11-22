@@ -1,0 +1,52 @@
+# 🎓 Online Quiz System (OQS)
+
+A modern web-based quiz system developed using **Python Flask**, featuring a clean blue UI theme, auto-grading MCQs, multiple user roles, and performance analytics.
+
+---
+
+## 🚀 Features
+
+### 🔹 Admin
+- Approve / delete teachers
+- Manage courses & MCQ questions
+- View student performance analytics
+
+### 🔹 Teacher
+- Apply for access (admin approval required)
+- Create and manage course examinations
+- Add MCQs with correct answer & marks
+
+### 🔹 Student
+- Register & login instantly
+- Attempt exams anytime (multiple attempts allowed)
+- Auto-calculated score after submission
+- View results history
+
+---
+
+## 🖼️ Screenshots
+
+### 🔐 Login Page  
+<img src="screenshots/login.png" width="800">
+
+### 📝 Registration Page  
+<img src="screenshots/register.png" width="800">
+
+### 🧑‍💼 Admin Dashboard  
+<img src="screenshots/admin_dashboard.png" width="800">
+
+### 📚 Manage Questions Page  
+<img src="screenshots/questions.png" width="800">
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+|----------|------------|
+| Frontend | HTML, CSS, Bootstrap 5, FontAwesome |
+| Backend | Flask (Python) |
+| Database | SQLite |
+| Authentication | Flask-Login |
+| Template Engine | Jinja2 |
+
