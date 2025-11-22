@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block content %}
+
+<h2 class="mb-3"><i class="fa-solid fa-user-shield"></i> Admin Dashboard</h2>
+
+<div class="row text-center mb-4">
+  <div class="col-md-3 mb-3">
+    <div class="card bg-info text-white shadow-sm p-3">
+      <h6>Total Students</h6>
+      <h2>{{ total_students }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div class="card bg-warning text-white shadow-sm p-3">
+      <h6>Total Teachers</h6>
+      <h2>{{ total_teachers }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div class="card bg-success text-white shadow-sm p-3">
+      <h6>Total Courses</h6>
+      <h2>{{ total_courses }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div class="card bg-danger text-white shadow-sm p-3">
+      <h6>Total Questions</h6>
+      <h2>{{ total_questions }}</h2>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<h4><i class="fa-solid fa-user-check"></i> Pending Teacher Approvals</h4>
+
+{% if pending_teachers %}
+<table class="table table-bordered table-hover mt-3">
+  <thead class="table-dark">
+    <tr>
+      <th>Username</th>
+      <th>Approve</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in pending_teachers %}
+    <tr>
+      <td>{{ t.username }}</td>
+      <td>
+        <a
+          href="{{ url_for('approve_teacher', user_id=t.id) }}"
+          class="btn btn-success btn-sm"
+        >
+          <i class="fa-solid fa-check"></i> Approve
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">No pending teachers</p>
+{% endif %}
+
+<hr />
+
+<div class="text-center mt-4">
+  <a
+    href="{{ url_for('admin_courses') }}"
+    class="btn btn-primary btn-lg shadow-sm"
+  >
+    <i class="fa-solid fa-list-check"></i> Manage Courses / Questions
+  </a>
+</div>
+
+{% endblock %}

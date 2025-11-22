@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block content %}
+
+<h2 class="mb-3 text-center">
+  <i class="fa-solid fa-pen-to-square"></i> Exam: {{ course.name }}
+</h2>
+
+<div class="card shadow p-4">
+  <form method="POST">
+    {% for q in questions %}
+    <div class="mb-4">
+      <strong>Q{{ loop.index }}. {{ q.question_text }}</strong>
+      <div class="mt-2">
+        <label class="btn btn-outline-dark w-100 text-start mb-2">
+          <input
+            type="radio"
+            class="form-check-input me-2"
+            name="q_{{ q.id }}"
+            value="A"
+          />
+          A) {{ q.option_a }}
+        </label>
+
+        <label class="btn btn-outline-dark w-100 text-start mb-2">
+          <input
+            type="radio"
+            class="form-check-input me-2"
+            name="q_{{ q.id }}"
+            value="B"
+          />
+          B) {{ q.option_b }}
+        </label>
+
+        <label class="btn btn-outline-dark w-100 text-start mb-2">
+          <input
+            type="radio"
+            class="form-check-input me-2"
+            name="q_{{ q.id }}"
+            value="C"
+          />
+          C) {{ q.option_c }}
+        </label>
+
+        <label class="btn btn-outline-dark w-100 text-start mb-2">
+          <input
+            type="radio"
+            class="form-check-input me-2"
+            name="q_{{ q.id }}"
+            value="D"
+          />
+          D) {{ q.option_d }}
+        </label>
+      </div>
+    </div>
+    {% else %}
+    <p class="text-danger text-center">No questions in this exam yet.</p>
+    {% endfor %} {% if questions %}
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary btn-lg px-5 shadow">
+        <i class="fa-solid fa-cloud-upload"></i> Submit Exam
+      </button>
+    </div>
+    {% endif %}
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %}
+<div class="register-box card shadow">
+  <h3 class="text-center mb-3 text-primary">
+    <i class="fa-solid fa-id-card"></i> Register
+  </h3>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Role</label>
+      <select name="role" class="form-select" required>
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
+    </div>
+    <button class="btn btn-success w-100">Register</button>
+  </form>
+</div>
+{% endblock %}

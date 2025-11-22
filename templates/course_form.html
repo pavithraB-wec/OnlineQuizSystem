@@ -1,0 +1,72 @@
+{% extends 'base.html' %} {% block content %} {% if mode == 'add' %}
+<h2 class="mb-3"><i class="fa-solid fa-book-medical"></i> Add Course</h2>
+
+<div class="card shadow p-4" style="max-width: 600px">
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Course Name</label>
+      <input type="text" name="name" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea name="description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button class="btn btn-success w-100">
+      <i class="fa-solid fa-check"></i> Save Course
+    </button>
+  </form>
+</div>
+
+{% else %}
+
+<h2 class="mb-3"><i class="fa-solid fa-list-check"></i> My Courses</h2>
+
+<a
+  href="{{ url_for(role + '_add_course') }}"
+  class="btn btn-primary mb-3 shadow-sm"
+>
+  <i class="fa-solid fa-plus"></i> Add Course
+</a>
+
+{% if courses %}
+<div class="row">
+  {% for c in courses %}
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ c.name }}</h5>
+        <p class="text-muted">{{ c.description }}</p>
+
+        <a
+          href="{{ url_for('view_questions', course_id=c.id) }}"
+          class="btn btn-outline-primary btn-sm w-100 mb-2"
+        >
+          <i class="fa-solid fa-question-circle"></i> Manage Questions
+        </a>
+
+        {% if role == 'admin' %}
+        <a
+          href="{{ url_for('admin_delete_course', course_id=c.id) }}"
+          class="btn btn-danger btn-sm w-100"
+        >
+          <i class="fa-solid fa-trash"></i> Delete
+        </a>
+        {% else %}
+        <a
+          href="{{ url_for('teacher_delete_course', course_id=c.id) }}"
+          class="btn btn-danger btn-sm w-100"
+        >
+          <i class="fa-solid fa-trash"></i> Delete
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<p class="text-muted">No courses added yet. Click "Add Course" above.</p>
+{% endif %} {% endif %} {% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block content %}
+
+<h2 class="mb-4 text-center">
+  <i class="fa-solid fa-chart-line"></i> My Exam Results
+</h2>
+
+{% if results %}
+<table class="table table-bordered table-hover shadow-sm bg-white">
+  <thead class="table-dark">
+    <tr>
+      <th>Course</th>
+      <th>Score</th>
+      <th>Total Marks</th>
+      <th>Percentage</th>
+      <th>Attempt Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in results %}
+    <tr>
+      <td>{{ r.course.name }}</td>
+      <td class="fw-bold">{{ r.score }}</td>
+      <td>{{ r.total_marks }}</td>
+      <td>{{ (r.score / r.total_marks * 100) | round(2) }}%</td>
+      <td>{{ r.taken_at.strftime('%d-%m-%Y %I:%M %p') }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+<p class="text-center text-muted">
+  <i class="fa-solid fa-circle-info"></i> No results yet! Give your first exam
+  🎯
+</p>
+{% endif %} {% endblock %}

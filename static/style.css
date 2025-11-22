@@ -1,0 +1,60 @@
+/* BLUE THEME BACKGROUND */
+body.bg-blue-theme {
+  background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background: #002b7a !important;
+}
+
+/* Card Styling */
+.card {
+  background: #ffffff;
+  border-radius: 15px;
+}
+
+/* Fancy Buttons */
+.btn {
+  border-radius: 30px !important;
+  padding: 10px !important;
+}
+
+/* Exam Page Option Buttons */
+label.btn-outline-dark {
+  border-radius: 12px;
+  background: #f0f5ff;
+  transition: 0.25s;
+}
+label.btn-outline-dark:hover {
+  background: #c8d8ff;
+}
+
+/* Flash message animation */
+.alert {
+  border-radius: 10px;
+  animation: fadeSlide 0.6s ease-in-out;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Login / Register Card */
+.login-box,
+.register-box {
+  width: 380px;
+  margin: auto;
+  margin-top: 80px;
+  padding: 30px;
+  animation: fadeSlide 0.6s ease-in-out;
+}

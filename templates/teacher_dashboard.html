@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block content %}
+
+<h2 class="mb-3">
+  <i class="fa-solid fa-chalkboard-teacher"></i> Teacher Dashboard
+</h2>
+
+<div class="row text-center mb-4">
+  <div class="col-md-4 mb-3">
+    <div class="card bg-primary text-white shadow-sm p-3">
+      <h6>Total Students</h6>
+      <h2>{{ total_students }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card bg-success text-white shadow-sm p-3">
+      <h6>Total Courses</h6>
+      <h2>{{ total_courses }}</h2>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card bg-info text-white shadow-sm p-3">
+      <h6>Total Questions</h6>
+      <h2>{{ total_questions }}</h2>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<div class="text-center">
+  <a
+    href="{{ url_for('teacher_courses') }}"
+    class="btn btn-primary btn-lg shadow-sm"
+  >
+    <i class="fa-solid fa-list-check"></i> Manage My Courses & Questions
+  </a>
+</div>
+
+{% endblock %}

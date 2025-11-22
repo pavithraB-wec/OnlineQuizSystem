@@ -1,0 +1,110 @@
+{% extends 'base.html' %} {% block content %} {% if mode == 'add' %}
+<h2 class="mb-3">
+  <i class="fa-solid fa-circle-question"></i> Add Question – {{ course.name }}
+</h2>
+
+<div class="card shadow p-4" style="max-width: 700px">
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Question Text</label>
+      <textarea
+        name="question_text"
+        class="form-control"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Option A</label>
+        <input type="text" name="option_a" class="form-control" required />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Option B</label>
+        <input type="text" name="option_b" class="form-control" required />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Option C</label>
+        <input type="text" name="option_c" class="form-control" required />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Option D</label>
+        <input type="text" name="option_d" class="form-control" required />
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Correct Option</label>
+        <select name="correct_option" class="form-select" required>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Marks</label>
+        <input
+          type="number"
+          name="marks"
+          class="form-control"
+          value="1"
+          min="1"
+          required
+        />
+      </div>
+    </div>
+
+    <button class="btn btn-success w-100">
+      <i class="fa-solid fa-plus"></i> Add Question
+    </button>
+  </form>
+</div>
+
+{% else %}
+
+<h2 class="mb-3">
+  <i class="fa-solid fa-layer-group"></i> Questions – {{ course.name }}
+</h2>
+
+<a
+  href="{{ url_for('add_question', course_id=course.id) }}"
+  class="btn btn-primary mb-3 shadow-sm"
+>
+  <i class="fa-solid fa-plus"></i> Add Question
+</a>
+
+{% if questions %}
+<table class="table table-bordered table-hover shadow-sm">
+  <thead class="table-dark">
+    <tr>
+      <th>Question</th>
+      <th>Correct</th>
+      <th>Marks</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in questions %}
+    <tr>
+      <td>{{ q.question_text }}</td>
+      <td><strong>{{ q.correct_option }}</strong></td>
+      <td>{{ q.marks }}</td>
+      <td class="text-center">
+        <a
+          href="{{ url_for('delete_question', question_id=q.id) }}"
+          class="btn btn-danger btn-sm"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">No questions added yet. Click “Add Question”.</p>
+{% endif %} {% endif %} {% endblock %}
