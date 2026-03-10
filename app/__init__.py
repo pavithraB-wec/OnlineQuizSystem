@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 import os
+from sqlalchemy.exc import SQLAlchemyError
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -62,11 +63,14 @@ def create_app(config_name=None):
     def load_user(user_id):
         return User.query.get(int(user_id))
     
-    # Create database tables and default admin
-    with app.app_context():
-        db.create_all()
-        from app.services.admin_service import AdminService
-        AdminService.create_default_admin()
+    if os.environ.get('AUTO_INIT_DB', '').lower() == 'true':
+        with app.app_context():
+            try:
+                db.create_all()
+                from app.services.admin_service import AdminService
+                AdminService.create_default_admin()
+            except SQLAlchemyError as exc:
+                app.logger.warning('Automatic database initialization failed: %s', exc)
     
     return app
 
