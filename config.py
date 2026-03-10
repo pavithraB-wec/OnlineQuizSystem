@@ -6,6 +6,17 @@ import os
 from datetime import timedelta
 
 
+def get_database_uri(default_uri):
+    """Return a SQLAlchemy-compatible database URL."""
+    database_url = os.environ.get('DATABASE_URL') or default_uri
+
+    # Some hosts provide Postgres URLs with the deprecated postgres:// scheme.
+    if database_url.startswith('postgres://'):
+        return database_url.replace('postgres://', 'postgresql://', 1)
+
+    return database_url
+
+
 class Config:
     """Base configuration"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
@@ -33,7 +44,7 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///dev_quizdb.db'
+    SQLALCHEMY_DATABASE_URI = get_database_uri('sqlite:///dev_quizdb.db')
     SQLALCHEMY_ECHO = True
 
 
@@ -47,7 +58,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///prod_quizdb.db'
+    SQLALCHEMY_DATABASE_URI = get_database_uri('sqlite:///prod_quizdb.db')
     
     # Security settings for production
     SESSION_COOKIE_SECURE = True
