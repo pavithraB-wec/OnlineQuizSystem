@@ -69,3 +69,8 @@ def create_app(config_name=None):
         AdminService.create_default_admin()
     
     return app
+
+
+# Expose a default WSGI callable so hosts configured with `gunicorn app:app`
+# can import the package directly.
+app = create_app()
