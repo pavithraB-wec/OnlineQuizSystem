@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Quiz - Online Quiz System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-container {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    .quiz-timer {
+        font-size: 24px;
+        font-weight: bold;
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .question-card {
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .option-label {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 15px;
+        padding: 15px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .option-label:hover {
+        border-color: #0d6efd;
+        background-color: #f8f9fa;
+    }
+
+    .option-label input[type="radio"]:checked + .option-text {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+
+    .option-label input[type="radio"]:checked {
+        border-color: #0d6efd;
+        background-color: #e7f1ff;
+    }
+
+    .progress-section {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .timer-warning {
+        color: #ffc107;
+    }
+
+    .timer-danger {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header with Timer -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-pen-to-square"></i> {{ quiz.title }}</h2>
+            <p class="text-muted">{{ quiz.description }}</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="card border-danger">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Time Remaining</h6>
+                    <div id="timer" class="quiz-timer text-danger">{{ quiz.time_limit_minutes }}:00</div>
+                    <small class="text-muted">Quiz auto-submits when time ends</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+        <div class="row">
+            <div class="col-md-8">
+                <h6>Progress</h6>
+                <div class="progress" style="height: 25px;">
+                    <div id="progress-bar" class="progress-bar bg-success" style="width: 0%">
+                        <span id="progress-text">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <small class="text-muted">
+                    <span id="answered-count">0</span> of <span>{{ questions|length }}</span> answered
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Questions -->
+    <form id="quiz-form" method="POST" action="{{ url_for('student.submit_quiz', attempt_id=attemptid.id) }}">
+        <div class="question-card">
+            {% for question in questions %}
+            <div class="question-wrapper" data-question-id="{{ question.id }}" style="{% if not loop.first %}display: none;{% endif %}">
+                <div class="mb-3">
+                    <h4>Question {{ loop.index }} of {{ questions|length }}</h4>
+                    <div class="progress mb-3">
+                        <div class="progress-bar" style="width: {{ (loop.index / questions|length) * 100 }}%"></div>
+                    </div>
+                </div>
+
+                <h5 class="mb-4">
+                    <i class="fas fa-circle-question"></i> {{ question.question_text }}
+                </h5>
+
+                <div class="options-container">
+                    {% for option in ['A', 'B', 'C', 'D'] %}
+                    {% set option_text = question.get_options_dict()[option] %}
+                    <label class="option-label">
+                        <input type="radio" name="q_{{ question.id }}" value="{{ option }}" class="form-check-input question-input">
+                        <span class="option-text">
+                            <strong>{{ option }})</strong> {{ option_text }}
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+
+                {% if question.difficulty_level %}
+                <div class="mt-4">
+                    <small class="text-muted">
+                        Difficulty: 
+                        <span class="badge {% if question.difficulty_level == 'easy' %}bg-success{% elif question.difficulty_level == 'medium' %}bg-warning{% else %}bg-danger{% endif %}">
+                            {{ question.difficulty_level|title }}
+                        </span>
+                    </small>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between">
+                    <button type="button" id="prev-btn" class="btn btn-secondary" style="display: none;">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button type="button" id="next-btn" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> Next
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success btn-lg w-100 py-3">
+                    <i class="fas fa-cloud-upload"></i> Submit Quiz
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Hidden data container for quiz data -->
+<div id="quiz-data" 
+     data-total-questions="{{ questions|length }}" 
+     data-time-limit="{{ quiz.time_limit_minutes }}" 
+     style="display:none;"></div>
+
+<script>
+let currentQuestion = 0;
+const totalQuestions = parseInt(document.getElementById('quiz-data').getAttribute('data-total-questions'));
+const timeLimit = parseInt(document.getElementById('quiz-data').getAttribute('data-time-limit')) * 60; // in seconds
+let timeRemaining = timeLimit;
+
+// Timer
+function updateTimer() {
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    const timerDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById('timer').textContent = timerDisplay;
+
+    if (timeRemaining <= 60) {
+        document.getElementById('timer').classList.add('timer-danger');
+    } else if (timeRemaining <= 300) {
+        document.getElementById('timer').classList.add('timer-warning');
+    }
+
+    timeRemaining--;
+    if (timeRemaining < 0) {
+        document.getElementById('quiz-form').submit();
+    }
+}
+
+setInterval(updateTimer, 1000);
+
+// Question Navigation
+document.getElementById('next-btn').addEventListener('click', function() {
+    if (currentQuestion < totalQuestions - 1) {
+        currentQuestion++;
+        updateQuestionDisplay();
+    }
+});
+
+document.getElementById('prev-btn').addEventListener('click', function() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        updateQuestionDisplay();
+    }
+});
+
+function updateQuestionDisplay() {
+    // Hide all questions
+    document.querySelectorAll('.question-wrapper').forEach(q => q.style.display = 'none');
+    document.querySelectorAll('.question-wrapper')[currentQuestion].style.display = 'block';
+
+    // Update buttons
+    document.getElementById('prev-btn').style.display = currentQuestion > 0 ? 'block' : 'none';
+    document.getElementById('next-btn').textContent = currentQuestion === totalQuestions - 1 
+        ? '✓ Review' 
+        : '→ Next';
+
+    updateProgressBar();
+    updateAnswerCount();
+}
+
+function updateProgressBar() {
+    const percentage = ((currentQuestion + 1) / totalQuestions) * 100;
+    document.getElementById('progress-bar').style.width = percentage + '%';
+    document.getElementById('progress-text').textContent = Math.round(percentage) + '%';
+}
+
+function updateAnswerCount() {
+    const answered = Array.from(document.querySelectorAll('input[type="radio"]:checked')).length;
+    document.getElementById('answered-count').textContent = answered;
+}
+
+// Track question answers
+document.querySelectorAll('.question-input').forEach(input => {
+    input.addEventListener('change', updateAnswerCount);
+});
+
+// Initialize
+updateProgressBar();
+updateAnswerCount();
+</script>
+{% endblock %}

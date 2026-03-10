@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 200px);">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                        <h2 class="card-title">QuizMaster</h2>
+                        <p class="text-muted">Welcome back! Please login</p>
+                    </div>
+
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() if form else '' }}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label"><i class="fas fa-user"></i> Username</label>
+                            <input type="text" class="form-control form-control-lg" id="username" 
+                                   name="username" placeholder="Enter your username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label"><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" class="form-control form-control-lg" id="password" 
+                                   name="password" placeholder="Enter your password" required>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-center mb-0">
+                        Don't have an account? 
+                        <a href="{{ url_for('auth.register') }}" class="text-decoration-none fw-bold">
+                            Register here
+                        </a>
+                    </p>
+
+                    <div class="mt-3 text-center">
+                        <small class="text-muted d-block mb-2">Demo Credentials:</small>
+                        <small class="text-muted">
+                            Admin: <strong>admin</strong> / <strong>admin@123</strong>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-3 text-center">
+                <i class="fas fa-info-circle"></i> 
+                This is a demo. Use the credentials above to explore all features.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

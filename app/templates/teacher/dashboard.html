@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Dashboard - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-chalkboard"></i> Teacher Dashboard</h1>
+        <a href="{{ url_for('teacher.create_course') }}" class="btn btn-success btn-lg">
+            <i class="fas fa-plus-circle"></i> Create New Course
+        </a>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">My Courses</h6>
+                            <h2 class="text-primary">{{ total_courses }}</h2>
+                        </div>
+                        <i class="fas fa-book fa-3x text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Questions</h6>
+                            <h2 class="text-success">{{ total_questions }}</h2>
+                        </div>
+                        <i class="fas fa-question-circle fa-3x text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Quizzes</h6>
+                            <h2 class="text-warning">{{ total_quizzes }}</h2>
+                        </div>
+                        <i class="fas fa-file-lines fa-3x text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-danger">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Results</h6>
+                            <h2 class="text-danger">{{ total_results }}</h2>
+                        </div>
+                        <i class="fas fa-certificate fa-3x text-danger opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Courses -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-book"></i> My Courses</h5>
+        </div>
+        {% if courses %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Questions</th>
+                        <th>Quizzes</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>
+                            <strong>{{ course.name }}</strong>
+                            <br>
+                            <small class="text-muted">{{ course.description[:50] if course.description else 'No description' }}...</small>
+                        </td>
+                        <td>{{ course.get_total_questions() }}</td>
+                        <td>{{ course.get_total_quizzes() }}</td>
+                        <td>{{ course.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <a href="{{ url_for('teacher.course_questions', course_id=course.id) }}" 
+                               class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{{ url_for('teacher.edit_course', course_id=course.id) }}" 
+                               class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form method="POST" action="{{ url_for('teacher.delete_course', course_id=course.id) }}" 
+                                  style="display: inline;" onsubmit="return confirm('Delete this course?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="card-body">
+            <div class="alert alert-info mb-0">
+                <i class="fas fa-info-circle"></i> No courses created yet. 
+                <a href="{{ url_for('teacher.create_course') }}" class="alert-link">Create your first course</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{{ url_for('teacher.courses') }}" class="btn btn-primary btn-lg w-100 mb-3">
+                <i class="fas fa-list"></i> Manage All Courses
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{{ url_for('teacher.results') }}" class="btn btn-info btn-lg w-100 mb-3">
+                <i class="fas fa-chart-bar"></i> View Student Results
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left-primary {
+    border-left: 4px solid #0d6efd;
+}
+.border-left-success {
+    border-left: 4px solid #198754;
+}
+.border-left-warning {
+    border-left: 4px solid #ffc107;
+}
+.border-left-danger {
+    border-left: 4px solid #dc3545;
+}
+</style>
+{% endblock %}

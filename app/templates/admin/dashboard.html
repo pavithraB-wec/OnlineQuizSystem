@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-chart-line"></i> Admin Dashboard</h1>
+        <span class="badge bg-danger">Administrator</span>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Total Users</h6>
+                            <h2 class="text-primary">{{ stats.total_users }}</h2>
+                        </div>
+                        <i class="fas fa-users fa-3x text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Students</h6>
+                            <h2 class="text-success">{{ stats.total_students }}</h2>
+                        </div>
+                        <i class="fas fa-user-graduate fa-3x text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Teachers</h6>
+                            <h2 class="text-warning">{{ stats.total_teachers }}</h2>
+                        </div>
+                        <i class="fas fa-chalkboard-user fa-3x text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Courses</h6>
+                            <h2 class="text-danger">{{ stats.total_courses }}</h2>
+                        </div>
+                        <i class="fas fa-book fa-3x text-danger opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Questions</h6>
+                            <h2 class="text-info">{{ stats.total_questions }}</h2>
+                        </div>
+                        <i class="fas fa-question-circle fa-3x text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Quizzes</h6>
+                            <h2 class="text-success">{{ stats.total_quizzes }}</h2>
+                        </div>
+                        <i class="fas fa-file-lines fa-3x text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Results</h6>
+                            <h2 class="text-warning">{{ stats.total_results }}</h2>
+                        </div>
+                        <i class="fas fa-certificate fa-3x text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-left-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted text-uppercase">Pending Teachers</h6>
+                            <h2 class="text-danger">{{ stats.pending_teachers }}</h2>
+                        </div>
+                        <i class="fas fa-hourglass-end fa-3x text-danger opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Teachers Section -->
+    {% if pending_teachers %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="fas fa-user-clock"></i> Pending Teacher Approvals</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Applied On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teacher in pending_teachers %}
+                        <tr>
+                            <td>
+                                <i class="fas fa-user"></i> {{ teacher.username }}
+                            </td>
+                            <td>{{ teacher.email or 'N/A' }}</td>
+                            <td>{{ teacher.created_at.strftime('%b %d, %Y') }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('admin.approve_teacher', user_id=teacher.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin.reject_teacher', user_id=teacher.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No pending teacher approvals
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.users') }}" class="btn btn-primary btn-lg btn-block w-100">
+                <i class="fas fa-users"></i> Manage Users
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.courses') }}" class="btn btn-info btn-lg btn-block w-100">
+                <i class="fas fa-book"></i> Manage Courses
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.analytics') }}" class="btn btn-success btn-lg btn-block w-100">
+                <i class="fas fa-chart-bar"></i> View Analytics
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{{ url_for('admin.pending_teachers') }}" class="btn btn-warning btn-lg btn-block w-100">
+                <i class="fas fa-check-square"></i> Teacher Approvals
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

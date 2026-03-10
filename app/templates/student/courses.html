@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Courses - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-book"></i> Available Courses</h1>
+        <form method="GET" class="form-inline">
+            <input type="text" name="search" class="form-control" placeholder="Search courses..." value="{{ search }}">
+            <button type="submit" class="btn btn-primary ms-2">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </div>
+
+    {% if courses %}
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100 course-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-book-open text-primary"></i> {{ course.name }}
+                    </h5>
+                    <p class="card-text text-muted">
+                        {{ course.description[:100] if course.description else 'No description available.' }}...
+                    </p>
+                    
+                    <div class="row text-center my-3">
+                        <div class="col-6 border-end">
+                            <small class="text-muted d-block">Questions</small>
+                            <h5 class="text-primary">{{ course.get_total_questions() }}</h5>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Quizzes</small>
+                            <h5 class="text-success">{{ course.get_total_quizzes() }}</h5>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light mb-0">
+                        <small class="text-muted">
+                            <i class="fas fa-user"></i> By {{ course.creator.full_name or course.creator.username }}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0">
+                    <a href="{{ url_for('student.course_detail', course_id=course.id) }}" 
+                       class="btn btn-primary w-100">
+                        <i class="fas fa-arrow-right"></i> View Course
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('student.courses', page=pagination.prev_num, search=search) }}">
+                    Previous
+                </a>
+            </li>
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num == pagination.page %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('student.courses', page=page_num, search=search) }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('student.courses', page=pagination.next_num, search=search) }}">
+                    Next
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle"></i> 
+        No courses found. 
+        <a href="{{ url_for('student.courses') }}" class="alert-link">Clear search</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.course-card {
+    transition: all 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
+}
+</style>
+{% endblock %}

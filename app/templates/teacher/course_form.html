@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Create/Edit Course - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-pen"></i> {% if course %}Edit Course{% else %}Create New Course{% endif %}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Course Name</label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{ course.name if course else '' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4">{{ course.description if course else '' }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-save"></i> Save Course
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('teacher.courses') }}" class="btn btn-secondary btn-lg w-100">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

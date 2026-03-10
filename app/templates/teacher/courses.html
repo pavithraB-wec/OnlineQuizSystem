@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Courses - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between mb-4">
+        <h1><i class="fas fa-book"></i> My Courses</h1>
+        <a href="{{ url_for('teacher.create_course') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> New Course
+        </a>
+    </div>
+
+    {% if courses %}
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>{{ course.name }}</h5>
+                    <p class="text-muted">{{ course.description[:100] if course.description else 'No description' }}...</p>
+                    <small>Questions: {{ course.get_total_questions() }} | Quizzes: {{ course.get_total_quizzes() }}</small>
+                    <br><br>
+                    <a href="{{ url_for('teacher.course_questions', course_id=course.id) }}" class="btn btn-sm btn-info">
+                        View Questions
+                    </a>
+                    <a href="{{ url_for('teacher.edit_course', course_id=course.id) }}" class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">No courses yet. <a href="{{ url_for('teacher.create_course') }}">Create one</a></div>
+    {% endif %}
+</div>
+{% endblock %}

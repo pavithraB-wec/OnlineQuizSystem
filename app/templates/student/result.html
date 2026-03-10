@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz Result - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Result Summary Card -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-lg border-0 text-center">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        {% if result.is_passed %}
+                            <i class="fas fa-trophy fa-5x text-success mb-3"></i>
+                            <h2 class="text-success mb-0">Congratulations!</h2>
+                            <p class="text-muted">You passed the quiz</p>
+                        {% else %}
+                            <i class="fas fa-times-circle fa-5x text-danger mb-3"></i>
+                            <h2 class="text-danger mb-0">Quiz Completed</h2>
+                            <p class="text-muted">Keep practising to improve</p>
+                        {% endif %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Score Display -->
+                    <div class="row text-center">
+                        <div class="col-md-6 mb-3">
+                            <h5 class="text-muted">Your Score</h5>
+                            <h1 class="text-primary">{{ result.obtained_marks }}/{{ result.total_marks }}</h1>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h5 class="text-muted">Percentage</h5>
+                            <h1 class="{% if result.is_passed %}text-success{% else %}text-danger{% endif %}">
+                                {{ "%.1f"|format(result.percentage) }}%
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div class="row text-center mt-4">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Grade</h6>
+                            <h2><span class="badge bg-primary" style="font-size: 24px;">{{ result.get_grade() }}</span></h2>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Time Spent</h6>
+                            <h2>{{ result.get_time_spent_formatted() }}</h2>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Detailed Stats -->
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="text-muted">Correct</h6>
+                                <h3 class="text-success">{{ result.correct_answers }}</h3>
+                                <progress class="progress mt-2" value="{{ result.correct_answers }}" max="{{ result.total_questions }}" style="width: 100%; height: 8px;"></progress>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="text-muted">Incorrect</h6>
+                                <h3 class="text-danger">{{ result.incorrect_answers }}</h3>
+                                <progress class="progress mt-2" value="{{ result.incorrect_answers }}" max="{{ result.total_questions }}" style="width: 100%; height: 8px;"></progress>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded">
+                                <h6 class="text-muted">Unattempted</h6>
+                                <h3 class="text-warning">{{ result.unattempted }}</h3>
+                                <progress class="progress mt-2" value="{{ result.unattempted }}" max="{{ result.total_questions }}" style="width: 100%; height: 8px;"></progress>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Answer Analysis -->
+    {% if questions_analysis %}
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3 class="mb-3"><i class="fas fa-list"></i> Answer Analysis</h3>
+            
+            {% for qa in questions_analysis %}
+            <div class="card shadow-sm mb-3">
+                <div class="card-header {% if qa.is_correct %}bg-success{% else %}bg-danger{% endif %} text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-{% if qa.is_correct %}check{% else %}times{% endif %}-circle"></i>
+                        Question {{ loop.index }}: 
+                        {% if qa.is_correct %}<span class="text-success">Correct</span>{% else %}<span class="text-danger">Incorrect</span>{% endif %}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3"><strong>Question:</strong> {{ qa.question.question_text }}</p>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><small class="text-muted">Your Answer:</small></p>
+                            <p>
+                                <strong>{{ qa.selected if qa.selected else 'Not attempted' }}</strong>
+                                {% if qa.selected %}
+                                    - {{ qa.question.get_options_dict()[qa.selected] }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><small class="text-muted">Correct Answer:</small></p>
+                            <p>
+                                <strong>{{ qa.question.correct_option }}</strong>
+                                - {{ qa.question.get_options_dict()[qa.question.correct_option] }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if qa.question.explanation %}
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-lightbulb"></i> Explanation</h6>
+                        {{ qa.question.explanation }}
+                    </div>
+                    {% endif %}
+
+                    <p class="mb-0">
+                        <small class="text-muted">
+                            Marks: {{ qa.marks_obtained }}/<span class="font-weight-bold">{{ qa.question.marks }}</span>
+                        </small>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="row mt-4 mb-4">
+        <div class="col-md-12">
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary btn-lg flex-grow-1">
+                    <i class="fas fa-home"></i> Back to Dashboard
+                </a>
+                <a href="{{ url_for('student.results') }}" class="btn btn-info btn-lg flex-grow-1">
+                    <i class="fas fa-history"></i> View All Results
+                </a>
+                <a href="{{ url_for('student.courses') }}" class="btn btn-primary btn-lg flex-grow-1">
+                    <i class="fas fa-book"></i> Browse More Courses
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

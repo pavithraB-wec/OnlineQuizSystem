@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Teachers - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1><i class="fas fa-hourglass-end"></i> Teacher Approvals</h1>
+
+    {% if pending_teachers %}
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Applied On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in pending_teachers %}
+                    <tr>
+                        <td><strong>{{ teacher.username }}</strong></td>
+                        <td>{{ teacher.email or 'N/A' }}</td>
+                        <td>{{ teacher.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.approve_teacher', user_id=teacher.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Approve</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('admin.reject_teacher', user_id=teacher.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-times"></i> Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No pending approvals</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Course Detail - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between mb-4">
+        <h1><i class="fas fa-book"></i> {{ course.name }}</h1>
+        <a href="{{ url_for('student.courses') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Best Score</h6>
+                    <h2 class="text-primary">{{ "%.1f"|format(best_score) }}%</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Average Score</h6>
+                    <h2 class="text-success">{{ "%.1f"|format(average_score) }}%</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Attempts</h6>
+                    <h2 class="text-warning">{{ total_attempts }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if quizzes %}
+    <h3 class="mb-3"><i class="fas fa-file-lines"></i> Available Quizzes</h3>
+    <div class="row">
+        {% for quiz in quizzes %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>{{ quiz.title }}</h5>
+                    <p class="text-muted">{{ quiz.description }}</p>
+                    <p><small><i class="fas fa-clock"></i> {{ quiz.time_limit_minutes }} minutes</small></p>
+                    <a href="{{ url_for('student.start_quiz', quiz_id=quiz.id) }}" class="btn btn-primary btn-sm">
+                        Start Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

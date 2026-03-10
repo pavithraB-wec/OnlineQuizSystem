@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Add/Edit Question - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-pen"></i> {% if question %}Edit Question{% else %}Add New Question{% endif %}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        <div class="mb-3">
+                            <label for="question_text" class="form-label">Question Text</label>
+                            <textarea class="form-control" id="question_text" name="question_text" rows="3" required>{{ question.question_text if question else '' }}</textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="marks" class="form-label">Marks</label>
+                                <input type="number" class="form-control" id="marks" name="marks" value="{{ question.marks if question else 1 }}" min="1">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="difficulty_level" class="form-label">Difficulty Level</label>
+                                <select class="form-control" id="difficulty_level" name="difficulty_level">
+                                    <option value="easy" {% if question and question.difficulty_level == 'easy' %}selected{% endif %}>Easy</option>
+                                    <option value="medium" {% if not question or question.difficulty_level == 'medium' %}selected{% endif %}>Medium</option>
+                                    <option value="hard" {% if question and question.difficulty_level == 'hard' %}selected{% endif %}>Hard</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3">Options</h5>
+                        {% for option in ['option_a', 'option_b', 'option_c', 'option_d'] %}
+                        <div class="mb-3">
+                            <label for="{{ option }}" class="form-label">Option {{ option[-1]|upper }}</label>
+                            <input type="text" class="form-control" id="{{ option }}" name="{{ option }}" 
+                                   value="{{ getattr(question, option) if question else '' }}" required>
+                        </div>
+                        {% endfor %}
+
+                        <div class="mb-3">
+                            <label for="correct_option" class="form-label">Correct Option</label>
+                            <select class="form-control" id="correct_option" name="correct_option" required>
+                                <option value="A" {% if question and question.correct_option == 'A' %}selected{% endif %}>Option A</option>
+                                <option value="B" {% if question and question.correct_option == 'B' %}selected{% endif %}>Option B</option>
+                                <option value="C" {% if question and question.correct_option == 'C' %}selected{% endif %}>Option C</option>
+                                <option value="D" {% if question and question.correct_option == 'D' %}selected{% endif %}>Option D</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="explanation" class="form-label">Explanation</label>
+                            <textarea class="form-control" id="explanation" name="explanation" rows="2">{{ question.explanation if question else '' }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-save"></i> Save Question
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ url_for('teacher.course_questions', course_id=course.id) }}" class="btn btn-secondary btn-lg w-100">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

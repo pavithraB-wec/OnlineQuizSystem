@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Courses - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between mb-4">
+        <h1><i class="fas fa-book"></i> All Courses</h1>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Creator</th>
+                        <th>Questions</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td><strong>{{ course.name }}</strong></td>
+                        <td>{{ course.creator.username }}</td>
+                        <td>{{ course.get_total_questions() }}</td>
+                        <td>{{ course.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.delete_course', course_id=course.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

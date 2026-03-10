@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Online Quiz System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 200px);">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-plus fa-3x text-success mb-3"></i>
+                        <h2 class="card-title">Join QuizMaster</h2>
+                        <p class="text-muted">Create your account to get started</p>
+                    </div>
+
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() if form else '' }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="username" class="form-label"><i class="fas fa-user"></i> Username</label>
+                                <input type="text" class="form-control" id="username" 
+                                       name="username" placeholder="Username" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" class="form-control" id="email" 
+                                       name="email" placeholder="Email (optional)">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label"><i class="fas fa-id-card"></i> Full Name</label>
+                            <input type="text" class="form-control" id="full_name" 
+                                   name="full_name" placeholder="Full name (optional)">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="password" class="form-label"><i class="fas fa-lock"></i> Password</label>
+                                <input type="password" class="form-control" id="password" 
+                                       name="password" placeholder="Password" required>
+                                <small class="text-muted">Min. 6 characters</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirm_password" class="form-label"><i class="fas fa-lock"></i> Confirm</label>
+                                <input type="password" class="form-control" id="confirm_password" 
+                                       name="confirm_password" placeholder="Confirm password" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="role" class="form-label"><i class="fas fa-user-tag"></i> Register as:</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="role" 
+                                               id="student_role" value="student" checked>
+                                        <label class="form-check-label" for="student_role">
+                                            <strong>Student</strong>
+                                            <small class="d-block text-muted">Take quizzes & track progress</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="role" 
+                                               id="teacher_role" value="teacher">
+                                        <label class="form-check-label" for="teacher_role">
+                                            <strong>Teacher</strong>
+                                            <small class="d-block text-muted">Create courses & questions</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-center mb-0">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold">
+                            Login here
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
