@@ -12,6 +12,7 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" novalidate>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="mb-3">
                             <label for="question_text" class="form-label">Question Text</label>
                             <textarea class="form-control" id="question_text" name="question_text" rows="3" required>{{ question.question_text if question else '' }}</textarea>

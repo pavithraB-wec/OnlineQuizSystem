@@ -109,6 +109,7 @@
                             </a>
                             <form method="POST" action="{{ url_for('teacher.delete_course', course_id=course.id) }}" 
                                   style="display: inline;" onsubmit="return confirm('Delete this course?');">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>

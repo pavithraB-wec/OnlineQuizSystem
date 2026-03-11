@@ -113,6 +113,7 @@
 
     <!-- Quiz Questions -->
     <form id="quiz-form" method="POST" action="{{ url_for('student.submit_quiz', attempt_id=attemptid.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="question-card">
             {% for question in questions %}
             <div class="question-wrapper" data-question-id="{{ question.id }}" style="{% if not loop.first %}display: none;{% endif %}">
